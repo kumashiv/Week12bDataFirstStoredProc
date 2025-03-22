@@ -62,7 +62,16 @@ namespace Week12bDataFirstStoredProc.Controllers
         }
 
 
+        public IActionResult Delete(int id)
+        {
+            // var Emp = _db.Employee.FirstOrDefault(x => x.id == id);
+            //_db.Employee.Remove(Emp);
 
+
+            _db.Database.ExecuteSqlRaw("execute DeleteEmployee @id={0}", id);
+            _db.SaveChanges();
+            return RedirectToAction("GetEmployeeData");
+        }
 
         public IActionResult Privacy()
         {
