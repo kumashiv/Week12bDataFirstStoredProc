@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Week12bDataFirstStoredProc.AppDbContext;
 using Week12bDataFirstStoredProc.Models;
 
@@ -35,13 +37,32 @@ namespace Week12bDataFirstStoredProc.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Create(Employee obj)
+        {
+            //_db.Employees.Add(obj);      // adding to SQL query    //constructor part
+
+            _db.Database.ExecuteSqlRaw(
+                "exec InsertEmployee @FirstName, @LastName, @Address",
+                new SqlParameter("@FirstName", obj.FirstName),
+                new SqlParameter("@LastName", obj.LastName),
+                new SqlParameter("@address", obj.Address)
+                );
+            _db.SaveChanges();      // Saving
+            return View();
+        }
+
 
         [HttpGet]
         public IActionResult GetEmployeeData()
         {
-            var Emp = _db.Employees.ToList();
+            //var Emp = _db.Employees.ToList();
+            var Emp = _db.Employees.FromSqlRaw("exec SelectEmployeeData");
             return View(Emp);
         }
+
+
+
 
         public IActionResult Privacy()
         {
