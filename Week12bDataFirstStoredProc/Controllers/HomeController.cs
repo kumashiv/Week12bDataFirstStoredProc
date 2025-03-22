@@ -1,17 +1,28 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Week12bDataFirstStoredProc.AppDbContext;
 using Week12bDataFirstStoredProc.Models;
 
 namespace Week12bDataFirstStoredProc.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly DataContext _db;      // To use this in various views
+                                               // - In C#, a constructor is a special method used
+                                               // for initializing new objects of a class
+        public HomeController(DataContext db)
         {
-            _logger = logger;
+            _db = db;
         }
+
+
+        //private readonly ILogger<HomeController> _logger;
+
+        //public HomeController(ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
         public IActionResult Index()
         {
@@ -24,6 +35,13 @@ namespace Week12bDataFirstStoredProc.Controllers
             return View();
         }
 
+
+        [HttpGet]
+        public IActionResult GetEmployeeData()
+        {
+            var Emp = _db.Employees.ToList();
+            return View(Emp);
+        }
 
         public IActionResult Privacy()
         {

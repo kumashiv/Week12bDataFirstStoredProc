@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using Week12bDataFirstStoredProc.AppDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,9 +9,9 @@ builder.Services.AddControllersWithViews();
 
 
 //From AppDbContext Folder and class created for model
-builder.Services.AddDbContext<DataContext>(Options =>
+builder.Services.AddDbContext<DataContext>(options =>
 {
-    Options.UseSqlServer(builder.Configuration.GetConnectionString("BloggingDatabase"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BloggingDatabase"));
 });
 
 var app = builder.Build();
