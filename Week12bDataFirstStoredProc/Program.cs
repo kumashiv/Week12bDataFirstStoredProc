@@ -1,7 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Week12bDataFirstStoredProc.AppDbContext;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
+//From AppDbContext Folder and class created for model
+builder.Services.AddDbContext<DataContext>(Options =>
+{
+    Options.UseSqlServer(builder.Configuration.GetConnectionString("BloggingDatabase"));
+});
 
 var app = builder.Build();
 
