@@ -1,0 +1,20 @@
+﻿@model Week12bDataFirstStoredProc.Models.Employee
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h1>Update</h1>
+
+<form asp-controller="Home" asp-action="Update">
+
+    <label>First Name</label>
+    <input type="text" asp-for="FirstName" />
+    <label>Last Name</label>
+    <input type="text" asp-for="LastName" />
+    <label>Address</label>
+    <input type="text" asp-for="Address" />
+
+    <button type="Submit">Update</button>
+</form>
+

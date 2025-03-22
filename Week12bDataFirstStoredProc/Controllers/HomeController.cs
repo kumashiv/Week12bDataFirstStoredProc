@@ -44,9 +44,14 @@ namespace Week12bDataFirstStoredProc.Controllers
 
             _db.Database.ExecuteSqlRaw(
                 "exec InsertEmployee @FirstName, @LastName, @Address",
-                new SqlParameter("@FirstName", obj.FirstName),
-                new SqlParameter("@LastName", obj.LastName),
-                new SqlParameter("@address", obj.Address)
+
+                new SqlParameter("@FirstName", obj.FirstName ?? (object)DBNull.Value),      // To allow null values
+                new SqlParameter("@LastName", obj.LastName ?? (object)DBNull.Value),
+                new SqlParameter("@Address", obj.Address ?? (object)DBNull.Value)
+
+                //new SqlParameter("@FirstName", obj.FirstName),
+                //new SqlParameter("@LastName", obj.LastName),
+                //new SqlParameter("@address", obj.Address)
                 );
             _db.SaveChanges();      // Saving
             return View();
@@ -72,6 +77,59 @@ namespace Week12bDataFirstStoredProc.Controllers
             _db.SaveChanges();
             return RedirectToAction("GetEmployeeData");
         }
+
+
+
+        [HttpGet]
+        public IActionResult Update(int id)     //Getting edit-able page with id
+        {
+            var Emp = _db.Employees.FirstOrDefault(x => x.id == id);     // matching id with database id
+
+            return View(Emp);
+        }
+
+
+
+
+        [HttpPost]
+        public IActionResult Update(Employee obj)
+        {
+            //_db.Employee.Update(obj);
+
+            var parameters = new[]
+            {
+               new SqlParameter("@Id",obj.id),
+               new SqlParameter("@FirstName",obj.FirstName),
+               new SqlParameter("@LastName",obj.LastName ?? (object)DBNull.Value),
+               new SqlParameter("@Address",obj.Address ?? (object)DBNull.Value),
+            };
+
+            _db.Database.ExecuteSqlRaw("Exec UpdateEmployee @id,@FirstName,@LastName,@Address", parameters);
+            _db.SaveChanges();
+            return RedirectToAction("GetEmployeeData");
+        }
+
+
+
+        //[HttpPost]
+        //public IActionResult Update(Employee obj)
+        //{
+        //    // Execute the stored procedure
+        //    var commandText = "exec UpdateEmployee @id, @FirstName, @LastName, @Address";
+        //    _db.Database.ExecuteSqlRaw(
+        //        commandText,
+        //        new SqlParameter("@id", obj.id),
+        //        //new SqlParameter("@FirstName", obj.FirstName),
+        //        //new SqlParameter("@LastName", obj.LastName),
+        //        //new SqlParameter("@Address", obj.Address)
+
+        //        new SqlParameter("@FirstName", obj.FirstName ?? (object)DBNull.Value),      // To allow null values
+        //        new SqlParameter("@LastName", obj.LastName ?? (object)DBNull.Value),
+        //        new SqlParameter("@Address", obj.Address ?? (object)DBNull.Value)
+        //    );
+
+        //    return RedirectToAction("GetEmployeeData");
+        //}
 
         public IActionResult Privacy()
         {
